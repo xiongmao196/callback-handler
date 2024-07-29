@@ -1,11 +1,8 @@
-// api/callback.js
-
+// pages/api/callback.js
 import crypto from 'crypto';
 
 export default function handler(req, res) {
-    if (req.method === 'GET') {
-        res.status(200).send('success');
-    } else if (req.method === 'POST') {
+    if (req.method === 'POST') {
         let body = '';
         req.on('data', chunk => {
             body += chunk.toString();
@@ -14,12 +11,15 @@ export default function handler(req, res) {
             const params = new URLSearchParams(body);
             const providedSign = params.get('sign');
             const apiKey = 'cHr7GUxa3E'; // 替换为你的 API 密钥
-            params.delete('sign');
-            params.sort();
+            params.delete('sign');  // 去除签名参数
+            params.sort();  // 对参数进行升序排序
 
+            // 生成键值对字符串
             const str = Array.from(params.entries()).map(([key, value]) => `${key}=${value}`).join('') + apiKey;
+            // 生成 MD5 哈希值并转为小写
             const calculatedSign = crypto.createHash('md5').update(str).digest('hex').toLowerCase();
 
+            // 比较计算的签名和提供的签名
             if (providedSign === calculatedSign) {
                 res.status(200).send('success');
             } else {
