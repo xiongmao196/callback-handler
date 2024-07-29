@@ -13,7 +13,7 @@ export default function handler(req, res) {
         req.on('end', () => {
             const params = new URLSearchParams(body);
             const providedSign = params.get('sign');
-            const apiKey = 'test'; // 替换为你的 API 密钥
+            const apiKey = 'cHr7GUxa3E'; // 替换为你的 API 密钥
             params.delete('sign');
             params.sort();
 
