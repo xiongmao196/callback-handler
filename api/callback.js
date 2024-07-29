@@ -10,12 +10,15 @@ export default function handler(req, res) {
         req.on('end', () => {
             const params = new URLSearchParams(body);
             const providedSign = params.get('sign');
-            const apiKey = 'cHr7GUxa3E'; // 替换为你的 API 密钥
+            const apiKey = 'cHr7GUxa3E'; // 替换为你的实际 API 密钥
             params.delete('sign');  // 去除签名参数
-            params.sort();  // 对参数进行升序排序
+            
+            // 对参数进行升序排序
+            const sortedParams = new URLSearchParams([...params.entries()].sort());
 
             // 生成键值对字符串
-            const str = Array.from(params.entries()).map(([key, value]) => `${key}=${value}`).join('') + apiKey;
+            const str = [...sortedParams.entries()].map(([key, value]) => `${key}=${value}`).join('') + apiKey;
+
             // 生成 MD5 哈希值并转为小写
             const calculatedSign = crypto.createHash('md5').update(str).digest('hex').toLowerCase();
 
