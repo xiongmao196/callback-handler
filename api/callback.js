@@ -1,4 +1,5 @@
 export default function handler(req, res) {
+    console.log(`Received request: ${req.method}`);
     if (req.method === 'GET') {
         res.status(200).send('success');
     } else if (req.method === 'POST') {
@@ -7,7 +8,7 @@ export default function handler(req, res) {
             body += chunk.toString();
         });
         req.on('end', () => {
-            console.log(body);
+            console.log(`Request body: ${body}`);
             res.status(200).send('success');
         });
     } else {
