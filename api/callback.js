@@ -1,5 +1,7 @@
 // api/callback.js
 
+import crypto from 'crypto';
+
 export default function handler(req, res) {
     if (req.method === 'GET') {
         res.status(200).send('success');
@@ -9,16 +11,15 @@ export default function handler(req, res) {
             body += chunk.toString();
         });
         req.on('end', () => {
-            console.log(body);
-            // 解析并验证签名
             const params = new URLSearchParams(body);
             const providedSign = params.get('sign');
-            const apiKey = 'cHr7GUxa3E'; // 替换为你的 API 密钥
+            const apiKey = 'test'; // 替换为你的 API 密钥
             params.delete('sign');
             params.sort();
+
             const str = Array.from(params.entries()).map(([key, value]) => `${key}=${value}`).join('') + apiKey;
-            const calculatedSign = require('crypto').createHash('md5').update(str).digest('hex').toLowerCase();
-            
+            const calculatedSign = crypto.createHash('md5').update(str).digest('hex').toLowerCase();
+
             if (providedSign === calculatedSign) {
                 res.status(200).send('success');
             } else {
