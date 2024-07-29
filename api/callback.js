@@ -1,7 +1,9 @@
 const { createServer } = require('http');
+const querystring = require('querystring');
 
 const server = createServer((req, res) => {
     if (req.method === 'GET') {
+        // 处理GET请求
         res.writeHead(200, { 'Content-Type': 'text/plain' });
         res.end('success');
     } else if (req.method === 'POST') {
@@ -10,7 +12,11 @@ const server = createServer((req, res) => {
             body += chunk.toString();
         });
         req.on('end', () => {
-            console.log(body);
+            // 解析表单数据
+            const parsedBody = querystring.parse(body);
+            console.log('Received POST data:', parsedBody);
+
+            // 确保处理返回小写的 'success'
             res.writeHead(200, { 'Content-Type': 'text/plain' });
             res.end('success');
         });
